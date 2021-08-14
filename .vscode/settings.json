@@ -4,7 +4,7 @@
   },
   "eslint.validate": ["typescript", "typescriptreact"],
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": false
   },
   "eslint.run": "onSave",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
