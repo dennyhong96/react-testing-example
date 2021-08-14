@@ -1,5 +1,5 @@
 {
-  "name": "color-button",
+  "name": "sundae",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -42,6 +42,7 @@
     "eslint": "^7.32.0",
     "eslint-plugin-jest-dom": "^3.9.0",
     "eslint-plugin-testing-library": "^3.10.2",
+    "msw": "^0.34.0",
     "typescript": "^4.3.5"
   }
 }
