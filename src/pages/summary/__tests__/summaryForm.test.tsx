@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import SummaryForm from "../summaryForm";
 
 describe("SummaryForm component", () => {
@@ -22,7 +23,7 @@ describe("SummaryForm component", () => {
     expect(checkbox).toBeVisible();
     expect(submitButton).toBeDisabled();
 
-    fireEvent.click(checkbox);
+    userEvent.click(checkbox);
     expect(submitButton).toBeEnabled();
   });
 
@@ -38,10 +39,10 @@ describe("SummaryForm component", () => {
     expect(checkbox).toBeVisible();
     expect(submitButton).toBeDisabled();
 
-    fireEvent.click(checkbox);
+    userEvent.click(checkbox);
     expect(submitButton).toBeEnabled();
 
-    fireEvent.click(checkbox);
+    userEvent.click(checkbox);
     expect(submitButton).toBeDisabled();
   });
 });
