@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { FC, ChangeEvent, useState } from "react";
 
 import "./App.css";
 
