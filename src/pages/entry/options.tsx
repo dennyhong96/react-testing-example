@@ -6,7 +6,7 @@ import ScoopOption from "./scoopOption";
 import ToppingOption from "./toppingOption";
 import AlertBanner from "../common/alertBanner";
 
-interface IOptionsProps {
+export interface IOptionsProps {
   optionType: "scoops" | "toppings";
 }
 
