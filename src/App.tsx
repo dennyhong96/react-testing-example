@@ -1,10 +1,18 @@
 import { FC } from "react";
+import Container from "react-bootstrap/Container";
 
-import SummaryForm from "./pages/summary/summaryForm";
+import { OrderDetailsProvider } from "./contexts/orderDetails";
+import OrderEntry from "./pages/entry/orderEntry";
 import "./App.css";
 
 const App: FC = () => {
-  return <SummaryForm />;
+  return (
+    <Container>
+      <OrderDetailsProvider>
+        <OrderEntry />
+      </OrderDetailsProvider>
+    </Container>
+  );
 };
 
 export default App;

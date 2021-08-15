@@ -1,11 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../../test-utils";
 import userEvent from "@testing-library/user-event";
 
 import Options from "../options";
 
 describe("totalUpdates", () => {
   test("Should update scoop total when scoop changes", async () => {
-    render(<Options optionType="scoops" />);
+    render(<Options optionType="scoops" />); // Redux, Context provider, router, etc
 
     // initial total
     const scoopSubtotal = screen.getByText("Scoops total: $", {
@@ -30,7 +30,7 @@ describe("totalUpdates", () => {
     expect(scoopSubtotal).toHaveTextContent("6.00");
   });
 
-  test("Should update topping total when topping changes", () => {
-    render(<Options optionType="toppings" />);
-  });
+  // test("Should update topping total when topping changes", () => {
+  //   render(<Options optionType="toppings" />);
+  // });
 });

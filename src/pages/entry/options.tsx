@@ -1,10 +1,12 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import Row from "react-bootstrap/Row";
 
 import ScoopOption from "./scoopOption";
 import ToppingOption from "./toppingOption";
 import AlertBanner from "../common/alertBanner";
+import { unitPrices } from "../../constants";
+import { useOrderDetails } from "../../contexts/orderDetails";
 
 export interface IOptionsProps {
   optionType: "scoops" | "toppings";
@@ -15,9 +17,19 @@ export interface Item {
   imagePath: string;
 }
 
+const formatCurrency = (number: number) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(number);
+};
+
 const Options = ({ optionType }: IOptionsProps) => {
   const [items, setItems] = useState<Item[]>([]);
   const [error, setError] = useState<Error | null>(null);
+
+  const [orderDetails, updateOptionsCount] = useOrderDetails();
 
   useEffect(() => {
     axios
@@ -28,14 +40,33 @@ const Options = ({ optionType }: IOptionsProps) => {
 
   const ItemComponent = optionType === "scoops" ? ScoopOption : ToppingOption;
 
+  const title = `${optionType[0].toUpperCase()}${optionType
+    .slice(1)
+    .toLowerCase()}`;
+
   return (
-    <Row>
-      {!error ? (
-        items.map((item) => <ItemComponent key={item.name} item={item} />)
-      ) : (
-        <AlertBanner />
-      )}
-    </Row>
+    <Fragment>
+      <h2>{title}</h2>
+      <p>${unitPrices[optionType]} each</p>
+      <p>
+        {title} total: {formatCurrency(orderDetails.totals[optionType])}
+      </p>
+      <Row>
+        {!error ? (
+          items.map((item) => (
+            <ItemComponent
+              key={item.name}
+              item={item}
+              updateItemCount={(newItemCount: string) =>
+                updateOptionsCount(item.name, newItemCount, optionType)
+              }
+            />
+          ))
+        ) : (
+          <AlertBanner />
+        )}
+      </Row>
+    </Fragment>
   );
 };
 

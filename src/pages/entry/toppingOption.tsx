@@ -2,7 +2,13 @@ import Col from "react-bootstrap/Col";
 
 import { Item } from "./options";
 
-const ToppingOption = ({ item }: { item: Item }) => {
+const ToppingOption = ({
+  item,
+  updateItemCount,
+}: {
+  item: Item;
+  updateItemCount: (newItemCount: string) => void;
+}) => {
   return (
     <Col xs={12} sm={6} md={4} lg={3} style={{ textAlign: "center" }}>
       <img
