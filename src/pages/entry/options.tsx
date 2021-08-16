@@ -7,6 +7,7 @@ import ToppingOption from "./toppingOption";
 import AlertBanner from "../common/alertBanner";
 import { unitPrices } from "../../constants";
 import { useOrderDetails } from "../../contexts/orderDetails";
+import { formatCurrency } from "../../utils";
 
 export interface IOptionsProps {
   optionType: "scoops" | "toppings";
@@ -16,14 +17,6 @@ export interface Item {
   name: string;
   imagePath: string;
 }
-
-export const formatCurrency = (number: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format(number);
-};
 
 const Options = ({ optionType }: IOptionsProps) => {
   const [items, setItems] = useState<Item[]>([]);
@@ -47,7 +40,7 @@ const Options = ({ optionType }: IOptionsProps) => {
   return (
     <Fragment>
       <h2>{title}</h2>
-      <p>${unitPrices[optionType]} each</p>
+      <p>{formatCurrency(unitPrices[optionType])} each</p>
       <p>
         {title} total: {formatCurrency(orderDetails.totals[optionType])}
       </p>

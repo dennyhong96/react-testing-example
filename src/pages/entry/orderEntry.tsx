@@ -1,5 +1,6 @@
 import { useOrderDetails } from "../../contexts/orderDetails";
-import Options, { formatCurrency } from "./options";
+import { formatCurrency } from "../../utils";
+import Options from "./options";
 
 const OrderEntry = () => {
   const [{ totals }] = useOrderDetails();
