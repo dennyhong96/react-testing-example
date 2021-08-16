@@ -17,7 +17,7 @@ export interface Item {
   imagePath: string;
 }
 
-const formatCurrency = (number: number) => {
+export const formatCurrency = (number: number) => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",

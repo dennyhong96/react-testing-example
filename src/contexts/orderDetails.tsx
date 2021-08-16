@@ -42,7 +42,7 @@ export const OrderDetailsProvider: FC = ({ children }) => {
     (optionType: TOptionType, options: typeof optionsCount) => {
       let total = 0;
       for (const count of options[optionType].values()) {
-        total += count * unitPrices[optionType];
+        total += (isFinite(count) ? count : 0) * unitPrices[optionType];
       }
       return total;
     },
