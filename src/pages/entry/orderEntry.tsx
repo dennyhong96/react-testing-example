@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 
 import { OrderPhases } from "../../App";
@@ -10,7 +11,11 @@ const OrderEntry = ({
 }: {
   setOrderPhase: (newPhase: OrderPhases) => void;
 }) => {
-  const [{ totals }] = useOrderDetails();
+  const [{ totals }, , resetOrder] = useOrderDetails();
+
+  useEffect(() => {
+    resetOrder();
+  }, [resetOrder]);
 
   return (
     <div>

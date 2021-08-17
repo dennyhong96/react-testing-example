@@ -17,7 +17,7 @@ describe("OrderEntry", () => {
       )
     );
 
-    render(<OrderEntry />);
+    render(<OrderEntry setOrderPhase={jest.fn()} />);
 
     // await screen.findAllByRole only await util first alert is on the screen, not both
     // await waitFor waits for the expectations to pass.

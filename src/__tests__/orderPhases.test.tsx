@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react"; // App is already wrapped inside providers
+import { render, screen } from "@testing-library/react"; // App is already wrapped inside providers
 import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 

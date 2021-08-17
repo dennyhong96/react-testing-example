@@ -10,7 +10,7 @@ const OrderConfirmation = ({
 }: {
   setOrderPhase: (newPhase: OrderPhases) => void;
 }) => {
-  const [details, , resetOrder] = useOrderDetails();
+  const [details] = useOrderDetails();
   const [orderNumber, setOrderNumber] = useState<number | undefined>();
 
   useEffect(() => {
@@ -19,17 +19,12 @@ const OrderConfirmation = ({
       .then((res) => setOrderNumber(res.data.orderNumber));
   }, [details]);
 
-  const handleReset = () => {
-    resetOrder();
-    setOrderPhase("inProgress");
-  };
-
   return orderNumber ? (
     <div>
       <h1>Thank You!</h1>
       <p>Your order number is {orderNumber}</p>
       <p>as per terms and conditions, nothing will happen now</p>
-      <Button variant="primary" onClick={handleReset}>
+      <Button variant="primary" onClick={() => setOrderPhase("inProgress")}>
         Create new order
       </Button>
     </div>

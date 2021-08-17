@@ -5,6 +5,20 @@ import Options from "../options";
 import OrderEntry from "../orderEntry";
 
 describe("totalUpdates", () => {
+  test("Grand total should start at $0.00", async () => {
+    render(<Options optionType="toppings" />);
+
+    const toppingsTotal = screen.getByText("Toppings total: $", {
+      exact: false,
+    });
+    expect(toppingsTotal).toHaveTextContent("0.00");
+
+    // Add an await to end of test to avoid "Can't perform a React state update on an unmounted component" error
+    await screen.findByRole("checkbox", {
+      name: "Cherries",
+    });
+  });
+
   test("Should update scoop total when scoops changes", async () => {
     render(<Options optionType="scoops" />); // Redux, Context provider, router, etc
 
@@ -31,20 +45,6 @@ describe("totalUpdates", () => {
     expect(scoopSubtotal).toHaveTextContent("6.00");
   });
 
-  test("Grand total should start at $0.00", async () => {
-    render(<Options optionType="toppings" />);
-
-    const toppingsTotal = screen.getByText("Toppings total: $", {
-      exact: false,
-    });
-    expect(toppingsTotal).toHaveTextContent("0.00");
-
-    // Add an await to end of test to avoid "Can't perform a React state update on an unmounted component" error
-    await screen.findByRole("checkbox", {
-      name: "Cherries",
-    });
-  });
-
   test("Should update topping total when toppings changes", async () => {
     render(<Options optionType="toppings" />);
 
@@ -63,7 +63,6 @@ describe("totalUpdates", () => {
 
     // Add more toppings
     const mmsCheckbox = await screen.findByRole("checkbox", { name: "M&Ms" });
-    userEvent.clear(mmsCheckbox);
     userEvent.click(mmsCheckbox);
     expect(toppingsTotal).toHaveTextContent("2.00");
 
@@ -73,7 +72,15 @@ describe("totalUpdates", () => {
   });
 
   test("Should update grand total correctly if scoops added first", async () => {
-    render(<OrderEntry />);
+    render(<OrderEntry setOrderPhase={jest.fn()} />);
+
+    // Await first to give context time to update
+    const chocolateScoopInput = await screen.findByRole("spinbutton", {
+      name: "Chocolate",
+    });
+    const hotFudgeToppingCheckbox = await screen.findByRole("checkbox", {
+      name: "M&Ms",
+    });
 
     // Initial
     const grandTotal = screen.getByRole("heading", {
@@ -82,17 +89,11 @@ describe("totalUpdates", () => {
     expect(grandTotal).toHaveTextContent("0.00");
 
     // Add scoop
-    const chocolateScoopInput = await screen.findByRole("spinbutton", {
-      name: "Chocolate",
-    });
     userEvent.clear(chocolateScoopInput);
     userEvent.type(chocolateScoopInput, "1");
     expect(grandTotal).toHaveTextContent("2.00");
 
     // Add topping
-    const hotFudgeToppingCheckbox = await screen.findByRole("checkbox", {
-      name: "M&Ms",
-    });
     userEvent.click(hotFudgeToppingCheckbox);
     expect(grandTotal).toHaveTextContent("3.00");
 
@@ -102,7 +103,14 @@ describe("totalUpdates", () => {
   });
 
   test("Should update grand total correctly if toppings added first", async () => {
-    render(<OrderEntry />);
+    render(<OrderEntry setOrderPhase={jest.fn()} />);
+
+    const hotFudgeToppingCheckbox = await screen.findByRole("checkbox", {
+      name: "Hot fudge",
+    });
+    const chocolateScoopInput = await screen.findByRole("spinbutton", {
+      name: "Chocolate",
+    });
 
     // Initial
     const grandTotal = screen.getByRole("heading", {
@@ -111,16 +119,10 @@ describe("totalUpdates", () => {
     expect(grandTotal).toHaveTextContent("0.00");
 
     // Add topping
-    const hotFudgeToppingCheckbox = await screen.findByRole("checkbox", {
-      name: "Hot fudge",
-    });
     userEvent.click(hotFudgeToppingCheckbox);
     expect(grandTotal).toHaveTextContent("1.00");
 
     // Add scoop
-    const chocolateScoopInput = await screen.findByRole("spinbutton", {
-      name: "Chocolate",
-    });
     userEvent.clear(chocolateScoopInput);
     userEvent.type(chocolateScoopInput, "2");
     expect(grandTotal).toHaveTextContent("5.00");

@@ -9,7 +9,7 @@ import SummaryForm from "../summaryForm";
 
 describe("SummaryForm component", () => {
   test("Should disable submit button by default", () => {
-    render(<SummaryForm />);
+    render(<SummaryForm onConfirm={jest.fn()} />);
 
     const submitButton = screen.getByRole("button", { name: /confirm order/i });
     expect(submitButton).toBeVisible();
@@ -17,7 +17,7 @@ describe("SummaryForm component", () => {
   });
 
   test("Should enable submit button after checking the checkbox", () => {
-    render(<SummaryForm />);
+    render(<SummaryForm onConfirm={jest.fn()} />);
 
     const checkbox = screen.getByRole("checkbox", {
       name: /terms and conditions/i,
@@ -33,7 +33,7 @@ describe("SummaryForm component", () => {
   });
 
   test("Should disable submit button after unchecking the checkbox", () => {
-    render(<SummaryForm />);
+    render(<SummaryForm onConfirm={jest.fn()} />);
 
     const checkbox = screen.getByRole("checkbox", {
       name: /terms and conditions/i,
@@ -52,7 +52,7 @@ describe("SummaryForm component", () => {
   });
 
   test("Popover should respond to hover", async () => {
-    render(<SummaryForm />);
+    render(<SummaryForm onConfirm={jest.fn()} />);
 
     // Popover starts off not on the page
     // When expecting element to not be on the document, use queryBy..., returns null

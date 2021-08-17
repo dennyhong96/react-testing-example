@@ -40,7 +40,6 @@ const INITIAL_TOTAL_STATE = {
 
 export const OrderDetailsProvider: FC = ({ children }) => {
   const [optionsCount, setOptionsCount] = useState(INITIAL_COUNT_STATE);
-
   const [totals, setTotals] = useState(INITIAL_TOTAL_STATE);
 
   const calculateTotal = useCallback(
@@ -67,20 +66,22 @@ export const OrderDetailsProvider: FC = ({ children }) => {
 
   const updateOptionsCount = useCallback(
     (itemName: string, newItemCount: string, optionType: TOptionType) => {
+      const { [optionType]: optionMap } = optionsCount;
+
+      const newOptionMap = new Map(optionMap); // Create a new map copy, avoid mutating old map
+      newOptionMap.set(itemName, parseInt(newItemCount));
+
       const newOptionsCount = { ...optionsCount };
-      const map = newOptionsCount[optionType];
-      map.set(itemName, parseInt(newItemCount));
+      newOptionsCount[optionType] = newOptionMap;
+
       setOptionsCount(newOptionsCount);
     },
     [optionsCount]
   );
 
   const resetOrder = useCallback(() => {
-    const newOptions = { ...optionsCount };
-    optionsCount.scoops.clear();
-    optionsCount.toppings.clear();
-    setOptionsCount(newOptions);
-  }, [optionsCount]);
+    setOptionsCount(INITIAL_COUNT_STATE);
+  }, []);
 
   return (
     <OrderDetailsContext.Provider
