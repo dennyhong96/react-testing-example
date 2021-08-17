@@ -20,23 +20,28 @@ interface IOrderDetails {
 
 type IOrderDetailsContextValue = [
   IOrderDetails,
-  (itemName: string, newItemCount: string, optionType: TOptionType) => void
+  (itemName: string, newItemCount: string, optionType: TOptionType) => void,
+  () => void
 ];
 
 export const OrderDetailsContext =
   createContext<IOrderDetailsContextValue | null>(null);
 
-export const OrderDetailsProvider: FC = ({ children }) => {
-  const [optionsCount, setOptionsCount] = useState({
-    scoops: new Map<string, number>(),
-    toppings: new Map<string, number>(),
-  });
+const INITIAL_COUNT_STATE = {
+  scoops: new Map<string, number>(),
+  toppings: new Map<string, number>(),
+};
 
-  const [totals, setTotals] = useState({
-    scoops: 0,
-    toppings: 0,
-    grandTotal: 0,
-  });
+const INITIAL_TOTAL_STATE = {
+  scoops: 0,
+  toppings: 0,
+  grandTotal: 0,
+};
+
+export const OrderDetailsProvider: FC = ({ children }) => {
+  const [optionsCount, setOptionsCount] = useState(INITIAL_COUNT_STATE);
+
+  const [totals, setTotals] = useState(INITIAL_TOTAL_STATE);
 
   const calculateTotal = useCallback(
     (optionType: TOptionType, options: typeof optionsCount) => {
@@ -70,9 +75,16 @@ export const OrderDetailsProvider: FC = ({ children }) => {
     [optionsCount]
   );
 
+  const resetOrder = useCallback(() => {
+    const newOptions = { ...optionsCount };
+    optionsCount.scoops.clear();
+    optionsCount.toppings.clear();
+    setOptionsCount(newOptions);
+  }, [optionsCount]);
+
   return (
     <OrderDetailsContext.Provider
-      value={[{ ...optionsCount, totals }, updateOptionsCount]}
+      value={[{ ...optionsCount, totals }, updateOptionsCount, resetOrder]}
     >
       {children}
     </OrderDetailsContext.Provider>

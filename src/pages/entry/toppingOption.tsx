@@ -3,6 +3,7 @@ import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 
 import { Item } from "./options";
+import { useOrderDetails } from "../../contexts/orderDetails";
 
 const ToppingOption = ({
   item,
@@ -11,6 +12,8 @@ const ToppingOption = ({
   item: Item;
   updateItemCount: (newItemCount: string) => void;
 }) => {
+  const [{ toppings }] = useOrderDetails();
+
   return (
     <Col xs={12} sm={6} md={4} lg={3} style={{ textAlign: "center" }}>
       <img
@@ -26,6 +29,7 @@ const ToppingOption = ({
         <Form.Check
           type="checkbox"
           label={item.name}
+          checked={toppings.get(item.name) === 1}
           onChange={(evt) => updateItemCount(evt.target.checked ? "1" : "0")}
         />
       </Form.Group>

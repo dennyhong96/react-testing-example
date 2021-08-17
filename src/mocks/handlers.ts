@@ -15,6 +15,7 @@ export const handlers = [
   rest.get("http://localhost:3030/scoops", (req, res, ctx) => {
     return res(ctx.json(scoops));
   }),
+
   rest.get("http://localhost:3030/toppings", (req, res, ctx) => {
     return res(ctx.json(toppings));
   }),

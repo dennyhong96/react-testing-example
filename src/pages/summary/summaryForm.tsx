@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
-const SummaryForm = () => {
+const SummaryForm = ({ onConfirm }: { onConfirm: () => void }) => {
   const [checked, setChecked] = useState(false);
 
   const popover = (
@@ -33,7 +33,12 @@ const SummaryForm = () => {
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit" disabled={!checked}>
+      <Button
+        variant="primary"
+        type="submit"
+        disabled={!checked}
+        onClick={onConfirm}
+      >
         Confirm Order
       </Button>
     </Form>
