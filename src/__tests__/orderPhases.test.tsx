@@ -43,10 +43,19 @@ describe("Order phases happy path", () => {
     reviewButton.click();
 
     // ****** review Phase ******
-    // Check summary info
     screen.getByRole("heading", {
       name: "Order Summary",
     });
+
+    // Check summary info
+    const scoopsSummary = screen.getByRole("heading", { name: /scoops: \$/i });
+    expect(scoopsSummary).toHaveTextContent("4.00");
+    const toppingsSummary = screen.getByRole("heading", {
+      name: /toppings: \$/i,
+    });
+    expect(toppingsSummary).toHaveTextContent("1.00");
+    const totalSummary = screen.getByRole("heading", { name: /total: \$/i });
+    expect(totalSummary).toHaveTextContent("5.00");
 
     // Accept terms and click confirm
     const termsCheckbox = screen.getByRole("checkbox");
