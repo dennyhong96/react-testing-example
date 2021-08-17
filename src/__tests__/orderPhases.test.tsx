@@ -10,23 +10,22 @@ describe("Order phases happy path", () => {
     render(<App />);
 
     // ****** inProgress Phase ******
-    screen.getByRole("heading", {
+    const inProgressHeadline = screen.getByRole("heading", {
       name: "Design Your Sundae!",
     });
+    expect(inProgressHeadline).toBeInTheDocument();
 
     // Totals start off as $0.00
     const scoopsTotal = screen.getByText("scoops total", { exact: false });
     expect(scoopsTotal).toHaveTextContent("0.00");
-
     const toppingsTotal = screen.getByText("toppings total", {
       exact: false,
     });
     expect(toppingsTotal).toHaveTextContent("0.00");
-
     const grandTotal = screen.getByText("Grand total", { exact: false });
     expect(grandTotal).toHaveTextContent("0.00");
 
-    // Add scoops and toppings
+    // Add scoops and toppings - await and find because scoops/toppings are added async
     const vanillaScoopInput = await screen.findByRole("spinbutton", {
       name: "Vanilla",
     });
@@ -38,14 +37,15 @@ describe("Order phases happy path", () => {
     });
     userEvent.click(hotFudgeToppingCheckbox);
 
-    // Click order button
+    // Click order button and go to review summary phase
     const reviewButton = screen.getByRole("button", { name: "Order" });
     reviewButton.click();
 
-    // ****** review Phase ******
-    screen.getByRole("heading", {
+    // ****** review (summary) Phase ******
+    const reviewHeadline = screen.getByRole("heading", {
       name: "Order Summary",
     });
+    expect(reviewHeadline).toBeInTheDocument();
 
     // Check summary info
     const scoopsSummary = screen.getByRole("heading", { name: /scoops: \$/i });
@@ -56,8 +56,13 @@ describe("Order phases happy path", () => {
     expect(toppingsSummary).toHaveTextContent("1.00");
     const totalSummary = screen.getByRole("heading", { name: /total: \$/i });
     expect(totalSummary).toHaveTextContent("5.00");
+    const options = screen.getAllByRole("listitem");
+    const optionsText = options.map((op) => op.textContent);
+    expect(optionsText).toEqual(["2 x Vanilla", "Hot fudge"]);
+    // expect(screen.getByText("2 x Vanilla")).toBeInTheDocument();
+    // expect(screen.getByText("Hot fudge")).toBeInTheDocument();
 
-    // Accept terms and click confirm
+    // Accept terms and click confirm, go to complete page
     const termsCheckbox = screen.getByRole("checkbox");
     termsCheckbox.click();
 
@@ -89,24 +94,30 @@ describe("Order phases happy path", () => {
     server.resetHandlers();
 
     // Check subtotals to be reset
-    screen.getByRole("heading", {
+    const completeHeadline = screen.getByRole("heading", {
       name: "Design Your Sundae!",
     });
+    expect(completeHeadline).toBeInTheDocument();
 
-    await waitFor(async () => {
-      await screen.findByAltText(/vanilla scoop/i);
-      await screen.findByAltText(/M&Ms topping/i);
+    // setTimeoue 0 to give context time to update state
+    setTimeout(() => {
+      const grandTotalReset = screen.getByText("Grand total", { exact: false });
+      expect(grandTotalReset).toHaveTextContent("0.00");
 
-      const grandTotal = screen.getByText("Grand total", { exact: false });
-      expect(grandTotal).toHaveTextContent("0.00");
-
-      const scoopsTotal = screen.getByText("scoops total", { exact: false });
-      expect(scoopsTotal).toHaveTextContent("0.00");
-
-      const toppingsTotal = screen.getByText("toppings total", {
+      const scoopsTotalReset = screen.getByText("scoops total", {
         exact: false,
       });
-      expect(toppingsTotal).toHaveTextContent("0.00");
-    });
+      expect(scoopsTotalReset).toHaveTextContent("0.00");
+
+      const toppingsTotalReset = screen.getByText("toppings total", {
+        exact: false,
+      });
+      expect(toppingsTotalReset).toHaveTextContent("0.00");
+    }, 0);
+
+    // await state updates to get rid of jest async warnings
+    // Can also move the below await & finds up before assertions to avoid using setTimeout
+    await screen.findByAltText(/vanilla scoop/i);
+    await screen.findByAltText(/M&Ms topping/i);
   });
 });

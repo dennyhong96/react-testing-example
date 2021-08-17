@@ -15,8 +15,10 @@ const OrderSummary = ({
       <h1>Order Summary</h1>
       <h2>Scoops: {formatCurrency(totals.scoops)}</h2>
       <ul>
-        {[...scoops.keys()].map((scoop) => (
-          <li key={scoop}>{scoop}</li>
+        {[...scoops.entries()].map(([scoop, count]) => (
+          <li key={scoop}>
+            {count} x {scoop}
+          </li>
         ))}
       </ul>
       <h2>Toppings: {formatCurrency(totals.toppings)}</h2>

@@ -13,20 +13,32 @@ export type OrderPhases = "inProgress" | "reivew" | "complete";
 const App: FC = () => {
   const [orderPhase, setOrderPhase] = useState<OrderPhases>("inProgress");
 
+  let PhaseComponent;
+  switch (orderPhase) {
+    case "inProgress": {
+      PhaseComponent = OrderEntry;
+      break;
+    }
+    case "reivew": {
+      PhaseComponent = OrderSummary;
+      break;
+    }
+    case "complete": {
+      PhaseComponent = OrderConfirmation;
+      break;
+    }
+    default: {
+      PhaseComponent = OrderEntry;
+      break;
+    }
+  }
+
   return (
-    <Container>
-      <OrderDetailsProvider>
-        {orderPhase === "inProgress" && (
-          <OrderEntry setOrderPhase={setOrderPhase} />
-        )}
-        {orderPhase === "reivew" && (
-          <OrderSummary setOrderPhase={setOrderPhase} />
-        )}
-        {orderPhase === "complete" && (
-          <OrderConfirmation setOrderPhase={setOrderPhase} />
-        )}
-      </OrderDetailsProvider>
-    </Container>
+    <OrderDetailsProvider>
+      <Container>
+        <PhaseComponent setOrderPhase={setOrderPhase} />
+      </Container>
+    </OrderDetailsProvider>
   );
 };
 
