@@ -11,7 +11,7 @@ const OrderEntry = ({
 }: {
   setOrderPhase: (newPhase: OrderPhases) => void;
 }) => {
-  const [{ totals }, , resetOrder] = useOrderDetails();
+  const [{ totals, scoops }, , resetOrder] = useOrderDetails();
 
   useEffect(() => {
     resetOrder();
@@ -23,7 +23,11 @@ const OrderEntry = ({
       <Options optionType="scoops" />
       <Options optionType="toppings" />
       <h2>Grand total {formatCurrency(totals.grandTotal)}</h2>
-      <Button variant="primary" onClick={() => setOrderPhase("reivew")}>
+      <Button
+        variant="primary"
+        onClick={() => setOrderPhase("reivew")}
+        disabled={scoops.size < 1}
+      >
         Order
       </Button>
     </div>

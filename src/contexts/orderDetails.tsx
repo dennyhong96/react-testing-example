@@ -66,10 +66,16 @@ export const OrderDetailsProvider: FC = ({ children }) => {
 
   const updateOptionsCount = useCallback(
     (itemName: string, newItemCount: string, optionType: TOptionType) => {
+      if (!Number.isFinite(parseInt(newItemCount))) return;
+
       const { [optionType]: optionMap } = optionsCount;
 
       const newOptionMap = new Map(optionMap); // Create a new map copy, avoid mutating old map
-      newOptionMap.set(itemName, parseInt(newItemCount));
+      if (parseInt(newItemCount) === 0) {
+        newOptionMap.delete(itemName);
+      } else {
+        newOptionMap.set(itemName, parseInt(newItemCount));
+      }
 
       const newOptionsCount = { ...optionsCount };
       newOptionsCount[optionType] = newOptionMap;

@@ -80,10 +80,18 @@ describe("Order phases happy path", () => {
     );
 
     // Check we have order number, click new order
-    screen.getByText("Loading...");
+    const loadingText = screen.getByText("Loading...");
+    expect(loadingText).toBeInTheDocument();
 
     await screen.findByRole("heading", { name: "Thank You!" });
-    screen.getByText(`Your order number is ${mockOrderNumber}`);
+
+    const disappearedLoading = screen.queryByText("Loading...");
+    expect(disappearedLoading).not.toBeInTheDocument();
+
+    const orderNumberText = screen.getByText(
+      `Your order number is ${mockOrderNumber}`
+    );
+    expect(orderNumberText).toBeInTheDocument();
 
     const resetButton = screen.getByRole("button", {
       name: "Create new order",
@@ -119,5 +127,50 @@ describe("Order phases happy path", () => {
     // Can also move the below await & finds up before assertions to avoid using setTimeout
     await screen.findByAltText(/vanilla scoop/i);
     await screen.findByAltText(/M&Ms topping/i);
+  });
+
+  test("Should hide toppings section from summary if non is added", async () => {
+    render(<App />);
+
+    // ****** inProgress Phase ******
+    const inProgressHeadline = screen.getByRole("heading", {
+      name: "Design Your Sundae!",
+    });
+    expect(inProgressHeadline).toBeInTheDocument();
+
+    // Add scoops and toppings - await and find because scoops/toppings are added async
+    const vanillaScoopInput = await screen.findByRole("spinbutton", {
+      name: "Vanilla",
+    });
+    userEvent.clear(vanillaScoopInput);
+    userEvent.type(vanillaScoopInput, "2");
+    const chocolateScoopInput = await screen.findByRole("spinbutton", {
+      name: "Chocolate",
+    });
+    userEvent.clear(chocolateScoopInput);
+    userEvent.type(chocolateScoopInput, "2");
+
+    // No topping is added
+
+    // Click order button and go to review summary phase
+    const reviewButton = screen.getByRole("button", { name: "Order" });
+    reviewButton.click();
+
+    // ****** review (summary) Phase ******
+    const reviewHeadline = screen.getByRole("heading", {
+      name: "Order Summary",
+    });
+    expect(reviewHeadline).toBeInTheDocument();
+
+    // Check summary info
+    const scoopSummary = screen.getByRole("heading", {
+      name: /scoops: \$/i,
+    });
+    expect(scoopSummary).toBeInTheDocument();
+
+    const noToppingSummary = screen.queryByRole("heading", {
+      name: /toppings: \$/i,
+    });
+    expect(noToppingSummary).not.toBeInTheDocument();
   });
 });

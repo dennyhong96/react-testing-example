@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { OrderPhases } from "../../App";
 import { useOrderDetails } from "../../contexts/orderDetails";
 import { formatCurrency } from "../../utils";
@@ -21,12 +22,16 @@ const OrderSummary = ({
           </li>
         ))}
       </ul>
-      <h2>Toppings: {formatCurrency(totals.toppings)}</h2>
-      <ul>
-        {[...toppings.keys()].map((topping) => (
-          <li key={topping}>{topping}</li>
-        ))}
-      </ul>
+      {toppings.size >= 1 && (
+        <Fragment>
+          <h2>Toppings: {formatCurrency(totals.toppings)}</h2>
+          <ul>
+            {[...toppings.keys()].map((topping) => (
+              <li key={topping}>{topping}</li>
+            ))}
+          </ul>
+        </Fragment>
+      )}
       <h2>Total: {formatCurrency(totals.grandTotal)}</h2>
       <SummaryForm onConfirm={() => setOrderPhase("complete")} />
     </div>
