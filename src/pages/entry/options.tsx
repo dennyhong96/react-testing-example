@@ -6,7 +6,7 @@ import ScoopOption from "./scoopOption";
 import ToppingOption from "./toppingOption";
 import AlertBanner from "../common/alertBanner";
 import { unitPrices } from "../../constants";
-import { useOrderDetails } from "../../contexts/orderDetails";
+import { TItemNames, useOrderDetails } from "../../contexts/orderDetails";
 import { formatCurrency } from "../../utils";
 
 export interface IOptionsProps {
@@ -14,7 +14,7 @@ export interface IOptionsProps {
 }
 
 export interface Item {
-  name: string;
+  name: TItemNames;
   imagePath: string;
 }
 

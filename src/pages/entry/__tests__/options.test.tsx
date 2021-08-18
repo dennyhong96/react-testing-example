@@ -1,6 +1,7 @@
+import userEvent from "@testing-library/user-event";
+
 import { render, screen } from "../../../test-utils";
 import { scoops, toppings } from "../../../mocks/handlers";
-
 import Options from "../options";
 
 describe("Options", () => {
@@ -32,5 +33,49 @@ describe("Options", () => {
     const toppingImagesAlt = toppingImages.map((img) => img.alt);
 
     expect(toppingImagesAlt).toEqual(toppings.map((t) => `${t.name} topping`));
+  });
+
+  // Skip because conflict with next text
+  test.skip("Should display input error when scoop input is invalid", async () => {
+    render(<Options optionType="scoops" />);
+
+    const scoopInput = await screen.findByRole("spinbutton", {
+      name: "Chocolate",
+    });
+
+    userEvent.clear(scoopInput);
+    expect(scoopInput).not.toHaveClass("is-invalid");
+
+    userEvent.type(scoopInput, "-1");
+    expect(scoopInput).toHaveClass("is-invalid");
+
+    userEvent.clear(scoopInput);
+    userEvent.type(scoopInput, "11");
+    expect(scoopInput).toHaveClass("is-invalid");
+
+    userEvent.clear(scoopInput);
+    userEvent.type(scoopInput, "1.5");
+    expect(scoopInput).toHaveClass("is-invalid");
+  });
+
+  test("Should not update scoops total with invalid input", async () => {
+    render(<Options optionType="scoops" />);
+
+    const scoopInput = await screen.findByRole("spinbutton", {
+      name: "Vanilla",
+    });
+
+    const scoopsTotal = screen.getByText("Scoops total: $", { exact: false });
+
+    userEvent.clear(scoopInput);
+    expect(scoopsTotal).toHaveTextContent("0.00");
+
+    userEvent.clear(scoopInput);
+    userEvent.type(scoopInput, "1");
+    expect(scoopsTotal).toHaveTextContent("2.00");
+
+    userEvent.clear(scoopInput);
+    userEvent.type(scoopInput, "-1");
+    expect(scoopsTotal).toHaveTextContent("0.00");
   });
 });

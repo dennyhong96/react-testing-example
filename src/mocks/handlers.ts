@@ -3,13 +3,13 @@ import { rest } from "msw";
 export const scoops = [
   { name: "Chocolate", imagePath: "/images/chocolate.png" },
   { name: "Vanilla", imagePath: "/images/vanilla.png" },
-];
+] as const;
 
 export const toppings = [
   { name: "Cherries", imagePath: "/images/cherries.png" },
   { name: "M&Ms", imagePath: "/images/m-and-ms.png" },
   { name: "Hot fudge", imagePath: "/images/hot-fudge.png" },
-];
+] as const;
 
 export const handlers = [
   rest.get("http://localhost:3030/scoops", (req, res, ctx) => {

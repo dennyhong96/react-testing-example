@@ -14,6 +14,12 @@ const ScoopOption = ({
 }) => {
   const [{ scoops }] = useOrderDetails();
 
+  const isValidInput =
+    Number.isFinite(scoops.get(item.name) ?? 0) &&
+    Number.isInteger(scoops.get(item.name) ?? 0) &&
+    Number(scoops.get(item.name) ?? 0) >= 0 &&
+    Number(scoops.get(item.name) ?? 0) <= 10;
+
   return (
     <Col xs={12} sm={6} md={4} lg={3} style={{ textAlign: "center" }}>
       <img
@@ -31,6 +37,7 @@ const ScoopOption = ({
         </Form.Label>
         <Col xs={5} style={{ textAlign: "left" }}>
           <Form.Control
+            isInvalid={!isValidInput}
             type="number"
             value={
               Number.isFinite(scoops.get(item.name)) ? scoops.get(item.name) : 0

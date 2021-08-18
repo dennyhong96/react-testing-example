@@ -128,6 +128,7 @@ describe("totalUpdates", () => {
     expect(grandTotal).toHaveTextContent("5.00");
 
     // Remove a scoop
+    userEvent.clear(chocolateScoopInput);
     userEvent.type(chocolateScoopInput, "1");
     expect(grandTotal).toHaveTextContent("3.00");
   });
