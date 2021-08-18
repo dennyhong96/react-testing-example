@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 
 import { useOrderDetails } from "../../contexts/orderDetails";
 import { OrderPhases } from "../../App";
+import AlertBanner from "../common/alertBanner";
 
 const OrderConfirmation = ({
   setOrderPhase,
@@ -12,11 +13,13 @@ const OrderConfirmation = ({
 }) => {
   const [details] = useOrderDetails();
   const [orderNumber, setOrderNumber] = useState<number | undefined>();
+  const [error, setError] = useState<Error | undefined>(undefined);
 
   useEffect(() => {
     axios
       .post("http://localhost:3030/order", details)
-      .then((res) => setOrderNumber(res.data.orderNumber));
+      .then((res) => setOrderNumber(res.data.orderNumber))
+      .catch(setError);
   }, [details]);
 
   return orderNumber ? (
@@ -28,6 +31,8 @@ const OrderConfirmation = ({
         Create new order
       </Button>
     </div>
+  ) : error ? (
+    <AlertBanner />
   ) : (
     <p>Loading...</p>
   );
